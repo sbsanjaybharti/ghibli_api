@@ -1,3 +1,5 @@
+import collections
+from re import split
 from urllib.request import urlopen
 from flask import current_app
 import json
@@ -24,6 +26,16 @@ class ghibhi:
     # /
     def films(self):
         return json.loads(urlopen('{}/{}'.format(self.api_url, 'films')).read())
+
+    # /
+    # Get Raw data
+    # Parameter id
+    # Requirement: id(film id)
+    # Return dict
+    # Description: get the detail of single film
+    # /
+    def singleFilm(self, id):
+        return json.loads(urlopen('{}/{}/{}'.format(self.api_url, 'films', id)).read())
 
     # /
     # Get Raw data
@@ -62,11 +74,16 @@ class movie(ghibhi):
 
     # /
     # builder pattern: Extending movie for getting people
-    # Parameter None
+    # Parameter id
     # Return object of people class
     # /
-    def people(self):
-        return people(self.get())
+    def people(self, id=None):
+        if id is None:
+            return people(self.get())
+        else:
+            self.film = self.singleFilm(id)
+            return people(self.get())
+
 
 # Derived class of ghibhi
 class people(ghibhi):
@@ -79,6 +96,31 @@ class people(ghibhi):
     def __init__(self, film=None):
         super(people,self).__init__()
         self.film = film
+        self.all_people = self.people()
+        self.group_by_film = collections.defaultdict(list)
+
+    # /
+    # Get dict
+    # parameter: None
+    # Requirement: collections.defaultdict(list)
+    # Return: self.group_by_film
+    # Description: it group the people film to reduce number of iteration
+    # /
+    def group(self):
+        for x in self.people():
+            self.filter(x)
+        return self.group_by_film
+
+    # /
+    # Method: Internal function
+    # Return: clean data
+    # Description: It will remove url attached in dict data['films'] which used to pair film with people
+    # /
+    def filter(self, data):
+        data_copy = data.copy()
+        data_copy.pop('films')
+        for film in data['films']:
+            self.group_by_film[film.replace('{}/{}/'.format(self.api_url, 'films'), '')].append(data_copy)
 
     # /
     # Get film detail with people
@@ -86,17 +128,13 @@ class people(ghibhi):
     # Return: dict
     # Description: Extend film detail with people
     # /
-    def bind(self):
+    def bind(self, data):
         # get all people of movie
-        self.film['people'] = self.getByfilmID(self.film['id'])
+        self.film['people'] = data
         return self.film
 
     # /
-    # Get people
-    # parameter id (Id of film)
-    # Requirement: id
-    # Return: list
-    # Description: get the list of people based on film id
+    # Not in use
     # /
     def getByfilmID(self, id):
         """
@@ -107,17 +145,14 @@ class people(ghibhi):
         people_list = []
         people_key = self.people_fields.copy()
         people_key.remove('films')
+
         for people in all_people:
             if '{}/films/{}'.format(self.api_url, id) in people['films']:
                 people_list.append({i: people[i] for i in people_key})
         return people_list
 
     # /
-    # Get people
-    # parameter id (Id of people)
-    # Requirement: id
-    # Return: Not implemented
-    # Description: pass
+    # not in use
     # /
     def get(self, id):
         pass
@@ -134,22 +169,36 @@ class BindMoviePeople(ghibhi):
     def __init__(self):
         super(BindMoviePeople,self).__init__()
         self.films_list = self.films()
+        self.people_group = dict(people().group())
         # self.films_list = [1, 2, 3, 4, 5]
 
     # /
-    # Get films
+    # Get list
+    # Requirement: self.films_list object of films list
+    # Return: list of film id in list form
+    # /
+    def film_ids(self):
+        return [list['id'] for list in self.films_list]
+
+    def getSingle(self, film_id):
+        if film_id in self.people_group:
+            return movie().people(film_id).bind(self.people_group[film_id])
+        else:
+            return movie().people(film_id).bind({})
+
+    # /
+    # Get list
     # Parameter list(list)
     # Requirement list(param) will be null
-    # Return: list
-    # Description: Recursion Method to get all films
+    # Return: list of all films with there people associated
+    # Description: Its a recursive function
     # /
     def get(self, list=[]):
         if len(self.films_list) > 0:
-            list.append(movie(self.films_list.pop()).people().bind())
+            pop_movie = self.films_list.pop()
+            if pop_movie['id'] in self.people_group:
+                list.append(movie(pop_movie).people().bind(self.people_group[pop_movie['id']]))
+            else:
+                list.append(movie(pop_movie).people().bind({}))
             self.get(list)
-        response_object = {
-            'code': 200,
-            'type': 'Success',
-            'data': list
-        }
-        return response_object
+        return list

@@ -17,13 +17,23 @@ class Config:
 
 class DevelopmentConfig(Config):
     DEBUG = True
-    CACHE_DEFAULT_TIMEOUT = 10
+    CACHE_SERVER = os.getenv('CACHE_SERVER')
+    CACHE_PORT = os.getenv('CACHE_PORT')
+    """Cache key"""
+    LAST_MODI_KEY = 'last_modification_key'
+    LIST_FILM_KEY = 'movie_list_key'
+    LIST_DATA_KEY = 'movie_data_key'
 
 class TestingConfig(Config):
     DEBUG = True
     TESTING = True
-    CACHE_DEFAULT_TIMEOUT = 0
+    CACHE_SERVER = os.getenv('CACHE_SERVER')
+    CACHE_PORT = os.getenv('CACHE_PORT')
     GHIBLI_API = os.getenv('GHIBLI_API')
+    """Cache key"""
+    LAST_MODI_KEY = 'test_last_modification_key'
+    LIST_FILM_KEY = 'test_movie_list_key'
+    LIST_DATA_KEY = 'test_movie_data_key'
 
 class ProductionConfig(Config):
     DEBUG = False
@@ -42,8 +52,8 @@ def create_app(config_name):
     app.config.from_object(config_by_name[config_name])
     config = {
         "DEBUG": True,  # some Flask specific configs
-        "CACHE_TYPE": app.config['CACHE_TYPE'],  # Flask-Caching related configs
-        "CACHE_DEFAULT_TIMEOUT": app.config['CACHE_DEFAULT_TIMEOUT']
+        # "CACHE_TYPE": app.config['CACHE_TYPE'],  # Flask-Caching related configs
+        # "CACHE_DEFAULT_TIMEOUT": app.config['CACHE_DEFAULT_TIMEOUT']
     }
     app.config.from_mapping(config)
     return app

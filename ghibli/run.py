@@ -6,6 +6,7 @@ import json
 from pymemcache.client.base import Client
 import datetime
 from src.config import create_app
+from src.service import service
 from src.ghibhi import BindMoviePeople
 
 # app = Flask(__name__)
@@ -22,58 +23,21 @@ def movies():
     """
     Connect with memcache server
     """
-    client = Client(('memcache', 11211))
-    list_films = BindMoviePeople().get()
-    return list_films
-    # result = [
-    #     {
-    #         "id": row['id'],
-    #         "title": row['title'],
-    #         "description": row['description'],
-    #         "director": row['director'],
-    #         "producer": row['producer'],
-    #         "release_date": row['release_date'],
-    #         "rt_score": row['rt_score']
-    #
-    #     } for row in json.loads(list_films)]
-    # # Create response for display
-    # response_object = {
-    #     'code': 200,
-    #     'type': 'Success',
-    #     'data': result
-    # }
-    # return response_object
-    # check the cache creation time exist or not
-    if client.get('movies_last_update') is None:
-        # 1. Get all movies from ghibhi
-        # 2. Add peoples to each movie
-        # 3. Add data to movies_data and pass to memcache
-        # 4. Add movies_last_update time to current time
-        # 5. Add list of movies ID in movies_id list
-        # 6. Return data
-        return
-    if (client.get('movies_last_update_time') - datetime.datetime.now()) > 1:
-        # 1. Get movies ID from Ghibhi and compare with movies_id(cache)
-        # 2. if both are same then
-        #   i. update movies_last_update time to current time
-        #   ii. get the movie data from movies_data(cache)
-        # 3. if both are not same then
-        #   i. Get the new movies id
-        #   ii. get all the new movies with people and append the movies_data
-        # 4. return movies_data
-        return
-    # return movies_data
+    result = ''
+    request = service()
+    if request.status() is None:
+        result = request.getFromServer()
+    elif request.status() < 60:
+        result = request.getFromCache()
+    else:
+        result = request.getCacheUpdate()
 
-
-    #Check the cache is older that one min
-    #
-    result = client.get('some_key')
-    if result is None:
-        client.set('some_key', [5, 6, 7, 8])
-        result = client.get('some_key')
-        return "Whale, Hello there!: {}".format(result)
-
-    return "Whale, Hello there!: {}".format(result)
+    response_object = {
+        'code': 200,
+        'type': 'Success',
+        'data': result
+    }
+    return response_object
 
 @manager.command
 def run():
