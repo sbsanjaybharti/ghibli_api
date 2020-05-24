@@ -1,7 +1,7 @@
 import unittest
 from flask import current_app
 from base import BaseTestCase, existsin
-from src.ghibhi import ghibhi
+from src.ghibhi import ghibhi, BindMoviePeople
 
 class TestGhibhiMethodExist(BaseTestCase):
 
@@ -16,6 +16,20 @@ class TestGhibhiMethodExist(BaseTestCase):
     @existsin(ghibhi)
     def test_class_have_method_people(self):
         """--> class:ghibhi -> method:people exists"""
+
+class TestBindMoviePeopleMethodExist(BaseTestCase):
+
+    @existsin(BindMoviePeople)
+    def test_class_have_method_film_ids(self):
+        """--> class:BindMoviePeople -> method:film_ids exists"""
+
+    @existsin(BindMoviePeople)
+    def test_class_have_method_getSingle(self):
+        """--> class:BindMoviePeople -> method:getSingle exists"""
+
+    @existsin(BindMoviePeople)
+    def test_class_have_method_get(self):
+        """--> class:BindMoviePeople -> method:get exists"""
 
 class TestGhibhiVariable(BaseTestCase):
 
@@ -51,6 +65,9 @@ class TestGhibhiVariable(BaseTestCase):
 
 class TestGhibhiMethod(BaseTestCase):
 
+    def ghibhi(self):
+        return ghibhi()
+
     def test_method_films(self):
         """--> class:ghibhi -> method:films exists"""
         api = self.ghibhi()
@@ -73,6 +90,45 @@ class TestGhibhiMethod(BaseTestCase):
         self.assertIsInstance(api.people(), object)
         self.assertEqual(type(api.people()), list)
         self.assertGreater(len(response), 1)
+
+class TestBindMoviePeopleMethod(BaseTestCase):
+
+    def ghibhi(self):
+        return ghibhi()
+
+    def test_method_film_ids(self):
+        """--> class:ghibhi -> method:film_ids exists"""
+        obj = BindMoviePeople()
+        response = obj.film_ids()
+        self.assertEqual(type(response), list)
+        self.assertGreater(len(response), 1)
+
+    def test_method_getSingle(self):
+        """--> class:ghibhi -> method:singleFilm exists"""
+        obj = BindMoviePeople()
+        id = '5fdfb320-2a02-49a7-94ff-5ca418cae602'
+        response = obj.getSingle(id)
+
+        self.assertNotEqual(response, None)
+        self.assertGreater(len(response), 1)
+        # self.assertEqual(type(response), list)
+        self.assertIsInstance(len(response), object)
+
+    def test_method_get(self):
+        """--> class:ghibhi -> method:people exists"""
+        obj = BindMoviePeople()
+        id = '5fdfb320-2a02-49a7-94ff-5ca418cae602'
+        response = obj.get()
+
+        self.assertNotEqual(response, None)
+        self.assertGreater(len(response), 1)
+        self.assertEqual(type(response), list)
+        self.assertIsInstance(len(response), object)
+
+        element = response.pop().keys()
+        keys = ['id', 'title', 'director', 'producer', 'release_date', 'rt_score', 'people']
+        self.assertListEqual(list(element), keys)
+        self.assertGreater(len(element), 1)
 
 if __name__ == '__main__':
     unittest.main()

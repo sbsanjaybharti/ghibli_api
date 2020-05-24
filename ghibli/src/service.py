@@ -1,9 +1,13 @@
+#!/usr/bin/env python3
+"""
+Import packages
+"""
 import json
 from time import time
-
 from flask import current_app
 from pymemcache.client.base import Client
 from .ghibhi import BindMoviePeople
+
 
 class JsonSerde(object):
     """Serialize and deserialize data to store in cache"""
@@ -14,15 +18,16 @@ class JsonSerde(object):
         return json.dumps(value), 2
 
     def deserialize(self, key, value, flags):
-       if flags == 1:
-           return value
-       if flags == 2:
-           return json.loads(value)
-       raise Exception("Unknown serialization format")
+        if flags == 1:
+            return value
+        if flags == 2:
+            return json.loads(value)
+        raise Exception("Unknown serialization format")
+
 
 class cache:
-
     """Base class of cache"""
+
     # /
     # Get access to cache server
     # variable: ENV variable required CACHE_SERVER and CACHE_PORT
@@ -30,7 +35,10 @@ class cache:
     # Return: setting return permission to read and wright on memcache server
     # /
     def __init__(self):
-        self.client = Client((current_app.config['CACHE_SERVER'], int(current_app.config['CACHE_PORT'])), serde=JsonSerde())
+        self.client = Client((
+            current_app.config['CACHE_SERVER'],
+            int(current_app.config['CACHE_PORT'])),
+            serde=JsonSerde())
 
     # /
     # Set write in cache
@@ -61,8 +69,10 @@ class cache:
     def delete(self, key):
         return self.client.delete(key)
 
+
 class service:
     """Class connect cache class with data processing classes"""
+
     # /
     # variable: last_modification_key, movie_list_key, movie_data_key
     # Requirement: pre define
@@ -82,7 +92,6 @@ class service:
     # Description: Used to check how old is cache
     # /
     def status(self):
-
         now = time()
         if self.cache.get(self.last_modification_key) is None:
             return None
@@ -126,7 +135,6 @@ class service:
     # Description: if cache is older than check new release and append in current cache
     # /
     def getCacheUpdate(self):
-
         """
         Compare the list from api with list from cache
         and get the list which is not in cache
