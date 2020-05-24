@@ -1,0 +1,57 @@
+version: '3'
+services:
+  # Traefik configuration
+  traefik:
+    image: traefik
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8080:8080"
+      - "8001:8001"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./traefik.toml:/etc/traefik/traefik.toml
+
+  memcache:
+    image: memcached
+    hostname: "memcache"
+    command: -m 1024
+    ports:
+      - "11211:11211"
+    labels:
+      - "traefik.backend=memcache"
+      - "traefik.frontend.rule=Host:memcache.docker.localhost"
+      - "traefik.port=11211"
+      - "traefik.enable=true"
+
+  # nginx configuration
+  dev:
+    build: ./nginx
+    environment:
+      APP_HOST_NAME: 'ghibli'
+      APP_HOST_PORT: 8001
+    container_name: dev_nginx
+    restart: always
+    depends_on:
+      - ghibli
+    labels:
+      - "traefik.backend=dev"
+      - "traefik.frontend.rule=Host:dev.docker.localhost"
+      - "traefik.port=9000"
+      - "traefik.enable=true"
+
+  # Flask code configuration
+  ghibli:
+    build:
+      context: ./ghibli
+      dockerfile: local.Dockerfile
+    environment:
+      APP_NAME: 'ghibli'
+      APP_STATUS: 'development'
+      CACHE_SERVER: 'memcache'
+      CACHE_PORT: 11211
+      GHIBLI_API: 'https://ghibliapi.herokuapp.com'
+    volumes:
+      - ./ghibli:/app
+    expose:
+      - 8001
