@@ -1,0 +1,101 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>Frontend Challenge</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="//code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+
+</head>
+<body>
+    <h1>List of Movies</h1>
+
+    <div style="float: right">Last update:{{time}} second ago &nbsp;</div>
+    <table id="" border="0" cellpadding="4" cellspacing="0" style="border-collapse: collapse;">
+        <tr><th width="30%">Movie</th><th width="5%">Score</th><th width="10%">Producer</th><th width="15%">Director</th><th width="40%">People</th></tr>
+        {%for row in response %}
+        <tr>
+            <td width="30%">{{row.title}} ({{row.release_date}})</td>
+            <td width="5%">{{row.rt_score}}</td>
+            <td width="10%">{{row.producer}}</td>
+            <td width="15%">{{row.director}}</td>
+            <td width="40%">
+                <uo>
+                {% for i in row.people %}
+                    <li>
+                      {{i.name}}(age {{i.age}}) with {{ i.eye_color if i.eye_color else '' }}  eyes, {{ i.hair_color if i.hair_color else '' }} hair
+                    </li>
+                {% endfor %}
+                </uo>
+            </td></tr>
+        </tr>
+        {%endfor%}
+    </table>
+    <table id="display_task" border="0" cellpadding="4" cellspacing="0" style="border-collapse: collapse;">
+
+    </table>
+    <div id="list"></div>
+
+<style>
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #333333;
+}
+
+li {
+  float: left;
+    clear: both;
+}
+
+li a {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 16px;
+  text-decoration: none;
+}
+
+li a.active {
+  background-color: #f44336;
+}
+li a:hover {
+  background-color: #333333;
+}
+a:link, a:visited {
+  /*background-color: #f44336;*/
+  /*color: white;*/
+  padding: 14px 25px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+}
+table a{
+  padding: 10px 25px !important;
+}
+/*a:hover, a:active {*/
+/*  background-color: #333333;*/
+/*}*/
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+th, td {
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even){background-color: #f2f2f2}
+
+th {
+  background-color: #333333;
+  color: white;
+}
+
+</style>
+</body>
+</html>

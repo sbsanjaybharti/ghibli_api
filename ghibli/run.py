@@ -4,7 +4,7 @@ Import packages
 """
 import os
 import unittest
-from flask import redirect, url_for
+from flask import redirect, url_for, render_template
 from flask_script import Manager
 from src.config import create_app
 from src.service import Service
@@ -34,12 +34,13 @@ def movies():
     else:
         result = request.get_cache_update()
 
-    response_object = {
-        'code': 200,
-        'type': 'Success',
-        'data': result
-    }
-    return response_object
+    # Uncomment this line to show in json format
+    # response_object = {
+    #     'code': 200,
+    #     'type': 'Success',
+    #     'data': result
+    # }
+    return render_template('index.html', response=result, time=int(request.status()))
 
 @manager.command
 def run():

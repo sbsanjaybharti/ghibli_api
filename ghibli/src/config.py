@@ -72,7 +72,8 @@ def create_app(config_name):
     """
     Use to create app and setting environment
     """
-    app = Flask(__name__, instance_relative_config=True)
+    template_dir = os.path.abspath('templates/')
+    app = Flask(__name__, template_folder=template_dir, instance_relative_config=True)
     app.config.from_object(config_by_name[config_name])
     config = {
         "DEBUG": True,  # some Flask specific configs
