@@ -1,28 +1,33 @@
+#!/usr/bin/env python3
+"""
+Import packages
+"""
 import unittest
-from functools import wraps
 
 from base import BaseTestCase, existsin
-from src.service import cache
+from src.service import Cache
 
 class TestCacheMethodExist(BaseTestCase):
+    """Test the class exist status"""
 
-    @existsin(cache)
+    @existsin(Cache)
     def test_class_have_method_get(self):
         """--> class:cache -> method:get exists"""
 
-    @existsin(cache)
+    @existsin(Cache)
     def test_class_have_method_set(self):
         """--> class:cache -> method:get exists"""
 
-    @existsin(cache)
+    @existsin(Cache)
     def test_class_have_method_delete(self):
         """--> class:cache -> method:delete exists"""
 
 class TestCacheMethods(BaseTestCase):
+    """Test class methods"""
 
     def test_method_set(self):
         """--> class:cache -> method:set store in cache """
-        obj = cache()
+        obj = Cache()
         request_key = 'some_key'
         request_data = 'test_data'
         self.assertNotEqual(obj.set(request_key, request_data), None)
@@ -30,7 +35,7 @@ class TestCacheMethods(BaseTestCase):
 
     def test_method_get(self):
         """--> class:cache -> method:get get from cache """
-        obj = cache()
+        obj = Cache()
         request_key = 'some_key'
         request_data = {'a': 'b', 'c': 'd'}
         obj.set(request_key, request_data)
@@ -39,7 +44,7 @@ class TestCacheMethods(BaseTestCase):
 
     def test_method_delete(self):
         """--> class:cache -> method:delete delete key """
-        obj = cache()
+        obj = Cache()
         request_key = 'some_key'
         request_data = {'a': 'b', 'c': 'd'}
         obj.set(request_key, request_data)

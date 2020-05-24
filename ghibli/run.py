@@ -7,7 +7,7 @@ import unittest
 from flask import redirect, url_for
 from flask_script import Manager
 from src.config import create_app
-from src.service import service
+from src.service import Service
 
 # app = Flask(__name__)
 app = create_app(os.getenv('APP_STATUS'))
@@ -26,13 +26,13 @@ def movies():
     """
     Connect with memcache server
     """
-    request = service()
+    request = Service()
     if request.status() is None:
-        result = request.getFromServer()
+        result = request.get_from_server()
     elif request.status() < 60:
-        result = request.getFromCache()
+        result = request.get_from_cache()
     else:
-        result = request.getCacheUpdate()
+        result = request.get_cache_update()
 
     response_object = {
         'code': 200,

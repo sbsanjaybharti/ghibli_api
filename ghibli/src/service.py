@@ -25,7 +25,7 @@ class JsonSerde(object):
         raise Exception("Unknown serialization format")
 
 
-class cache:
+class Cache:
     """Base class of cache"""
 
     # /
@@ -37,8 +37,8 @@ class cache:
     def __init__(self):
         self.client = Client((
             current_app.config['CACHE_SERVER'],
-            int(current_app.config['CACHE_PORT'])),
-            serde=JsonSerde())
+            int(current_app.config['CACHE_PORT'])
+        ), serde=JsonSerde())
 
     # /
     # Set write in cache
@@ -48,6 +48,7 @@ class cache:
     # Description: write data with key pair
     # /
     def set(self, key, data):
+        """Add data to cache"""
         self.client.set(key, data)
         return data
 
@@ -59,6 +60,7 @@ class cache:
     # Description: read the data of specific key pair
     # /
     def get(self, key):
+        """Get data to cache"""
         return self.client.get(key)
 
     # /
@@ -67,10 +69,11 @@ class cache:
     # Description: used to delete key from cache server
     # /
     def delete(self, key):
+        """Delete data to cache"""
         return self.client.delete(key)
 
 
-class service:
+class Service:
     """Class connect cache class with data processing classes"""
 
     # /
@@ -82,7 +85,7 @@ class service:
         self.last_modification_key = current_app.config['LAST_MODI_KEY']
         self.movie_list_key = current_app.config['LIST_FILM_KEY']
         self.movie_data_key = current_app.config['LIST_DATA_KEY']
-        self.cache = cache()
+        self.cache = Cache()
 
     # /
     # Get time
@@ -92,11 +95,11 @@ class service:
     # Description: Used to check how old is cache
     # /
     def status(self):
+        """Check the cache status"""
         now = time()
         if self.cache.get(self.last_modification_key) is None:
             return None
-        else:
-            return (now - self.cache.get(self.last_modification_key))
+        return now - self.cache.get(self.last_modification_key)
 
     # /
     # Get data
@@ -105,14 +108,14 @@ class service:
     # Return: data
     # Description: It will get the data from main server ad update cache used in initial stage
     # /
-    def getFromServer(self):
+    def get_from_server(self):
         """Get from main server"""
         data = BindMoviePeople().get()
-        """Set data cache"""
+        # Set data cache
         self.cache.set(self.movie_data_key, data)
-        """Set cache creation time"""
+        # Set cache creation time
         self.cache.set(self.last_modification_key, time())
-        """Set cache list of movie id"""
+        # Set cache list of movie id
         self.cache.set(self.movie_list_key, [sub['id'] for sub in data])
         # print(data.keys())
         return data
@@ -124,7 +127,8 @@ class service:
     # Return: data
     # Description: if cache is not older than 1 min then get the data from cache
     # /
-    def getFromCache(self):
+    def get_from_cache(self):
+        """Get data to class:cache"""
         return self.cache.get(self.movie_data_key)
 
     # /
@@ -134,7 +138,7 @@ class service:
     # Return: data
     # Description: if cache is older than check new release and append in current cache
     # /
-    def getCacheUpdate(self):
+    def get_cache_update(self):
         """
         Compare the list from api with list from cache
         and get the list which is not in cache
@@ -143,13 +147,12 @@ class service:
         server_data_keys = BindMoviePeople().film_ids()
         data = self.cache.get(self.movie_data_key)
         for record in list(set(server_data_keys) - set(cache_data_keys)):
-            data.append(BindMoviePeople().getSingle(record))
+            data.append(BindMoviePeople().get_single(record))
 
-        """Set data cache"""
+        # Set data cache
         self.cache.set(self.movie_data_key, data)
-        """Set cache creation time"""
+        # Set cache creation time
         self.cache.set(self.last_modification_key, time())
-        """Set cache list of movie id"""
+        # Set cache list of movie id
         self.cache.set(self.movie_list_key, [sub['id'] for sub in data])
-        # print(data.keys())
         return data

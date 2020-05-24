@@ -1,35 +1,41 @@
+#!/usr/bin/env python3
+"""
+Import packages
+"""
 import unittest
 from functools import wraps
 
 from base import BaseTestCase, existsin
-from src.ghibhi import movie, people
+from src.ghibhi import Movie, People
 
 
 class TestMovieMethodExist(BaseTestCase):
+    """Test the class exist status"""
 
-    @existsin(movie)
+    @existsin(Movie)
     def test_class_have_method_get(self):
-        """--> class:movie -> method:get exists"""
+        """--> class:Movie -> method:get exists"""
 
-    @existsin(movie)
+    @existsin(Movie)
     def test_class_have_method_people(self):
-        """--> class:movie -> method:people exists"""
+        """--> class:Movie -> method:people exists"""
 
 class TestMovie(BaseTestCase):
+    """Test class methods"""
 
     def test_class_is_object(self):
-        """--> class:movie -> variable:film if null"""
+        """--> class:Movie -> variable:film if null"""
         film = None
-        response = movie(film)
+        response = Movie(film)
         self.assertIsInstance(response, object)
 
     def test_method_get_null(self):
-        """--> class:movie -> method:get null value"""
-        response = movie()
+        """--> class:Movie -> method:get null value"""
+        response = Movie()
         self.assertEqual(response.get(), {})
 
     def test_method_get_not_null(self):
-        """--> class:movie -> method:get not null value"""
+        """--> class:Movie -> method:get not null value"""
         request = {
             "id": 'string',
             "title": 'string',
@@ -39,13 +45,13 @@ class TestMovie(BaseTestCase):
             "release_date": 'string',
             "rt_score": 'string',
         }
-        obj = movie(request)
+        obj = Movie(request)
         response = obj.get()
         self.assertIsInstance(response, object)
         self.assertListEqual(list(response.keys()), obj.film_fields)
 
     def test_method_get_data(self):
-        """--> class:movie -> method:get value"""
+        """--> class:Movie -> method:get value"""
         request = {
             "id": 'string',
             "title": 'string',
@@ -55,13 +61,13 @@ class TestMovie(BaseTestCase):
             "release_date": 'string',
             "rt_score": 'string',
         }
-        obj = movie(request)
+        obj = Movie(request)
         response = obj.get()
         self.assertEqual(len(response), len(obj.film_fields))
         self.assertListEqual(list(response.keys()), obj.film_fields)
 
     def test_method_people_class_parameter(self):
-        """--> class:movie -> method:people with class parameter"""
+        """--> class:Movie -> method:people with class parameter"""
         request = {
             "id": 'string',
             "title": 'string',
@@ -71,13 +77,13 @@ class TestMovie(BaseTestCase):
             "release_date": 'string',
             "rt_score": 'string',
         }
-        response = movie(request).people()
+        response = Movie(request).people()
         self.assertIsInstance(response, object)
     def test_method_people_by_parameter(self):
-        """--> class:movie -> method:people with method parameter"""
+        """--> class:Movie -> method:people with method parameter"""
         request = '5fdfb320-2a02-49a7-94ff-5ca418cae602'
-        # response = movie()
-        response = movie().people(request)
+        # response = Movie()
+        response = Movie().people(request)
         self.assertIsInstance(response, object)
 
 if __name__ == '__main__':
