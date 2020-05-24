@@ -18,11 +18,6 @@ services:
     command: -m 1024
     ports:
       - "11211:11211"
-    labels:
-      - "traefik.backend=memcache"
-      - "traefik.frontend.rule=Host:memcache.docker.localhost"
-      - "traefik.port=11211"
-      - "traefik.enable=true"
 
   # nginx configuration
   dev:
@@ -36,7 +31,7 @@ services:
       - ghibli
     labels:
       - "traefik.backend=dev"
-      - "traefik.frontend.rule=Host:dev.docker.localhost"
+      - "traefik.frontend.rule=Host:nginx.localhost"
       - "traefik.port=9000"
       - "traefik.enable=true"
 
