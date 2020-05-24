@@ -43,6 +43,22 @@ def movies():
     return render_template('index.html', response=result, time=int(request.status()))
 
 @manager.command
+def create_cache():
+    """
+    Command: python run.py create
+    Description: To run the application
+    """
+    print('Creating cache under process....')
+    request = Service()
+    if request.status() is None:
+        request.get_from_server()
+    elif request.status() < 60:
+        request.get_from_cache()
+    else:
+        request.get_cache_update()
+    print('Cache created successfully')
+
+@manager.command
 def run():
     """
     Command: python run.py run
