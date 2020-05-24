@@ -63,18 +63,17 @@ docker-compose build
 docker-compose up
 ```
 #### Step-2
-1. Create cache on server by command line (Optional)
+1. Create cache on server by command line (Optional), first command will take you in the container and second command will create cache.
 ```python 
 docker-compose exec ghibli /bin/bash 
 python run.py create_cache
 ``` 
 2. open the link http://nginx.localhost/movies.
-3. To run the test cases open new terminal in same folder and run the command
+3. To run the test cases open new terminal in same folder and run the command, first command will take you in the container and second command to run the test.
 ```python 
 docker-compose exec ghibli /bin/bash 
 python run.py test
 ``` 
-first command will take you in the container and second command to run the test.
 4. To test PEP8 status
 ```python 
 docker-compose exec ghibli /bin/bash 
