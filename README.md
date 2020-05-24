@@ -83,16 +83,11 @@ first command will take you in the container and second command to run the pylin
 replace <filename> with actual file name eg. run.py, src/service.py and so on
 
  
-#### Design pattern:
-1. Design pattern:
-    a. Creational: Builder, Factory design pattern
-    b. Structural: Proxy and Bridge design pattern
-    c. Behaviral: Mediator and Chain of responsibility design pattern
- 
 ##### Advantage:
 1. First time it will take time to load all the movie in cache
 2. After that it will take get the data from cache so it will be faster.
 3. Optimized code is written 
 4. Archtecture is best for non concurent user.
 5. Minimum hit to Ghibli API
+6. Initial cache can be creat by command line also if data is very high.
 
