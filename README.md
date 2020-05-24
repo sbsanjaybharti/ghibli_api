@@ -18,8 +18,8 @@ Flask application to serve data from ghibli api
 ![](system_architecture-L1-System_Archtecture.png)
 #### Solution Architecture:
 ![](system_architecture-L2-Application_flow.png)
-<br/>You can open the architecture design in draw.io also.
-open https:draw.io and select the file system_architecture.drawio
+<br/>You can open the architecture design in draw.io also by
+opening https:draw.io and select the file system_architecture.drawio
 
 #### Folder Structure:
     --ghibli(main application)
