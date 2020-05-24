@@ -85,8 +85,10 @@ replace <filename> with actual file name eg. run.py, src/service.py and so on
     b. Structural: Proxy and Bridge design pattern
     c. Behaviral: Mediator and Chain of responsibility design pattern
  
-##### Feature:
-1. Memcache used to handle the load on application
-2. Panda library is used  to handle big data to process CSV.
-3. Swagger to display the API.
-4. Application can handle large number of data without user waiting time.
+##### Advantage:
+1. First time it will take time to load all the movie in cache
+2. After that it will take get the data from cache so it will be faster.
+3. Optimized code is written 
+4. Archtecture is best for non concurent user.
+5. Minimum hit to Ghibli API
+
