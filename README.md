@@ -8,6 +8,12 @@ Flask application to serve data from ghibli api
 4. If cache exist but older than one minute then compare the data and check new release on ghibhi and if we find any new release then append the data in existing cache and serve the data
 
 #### Architecture
+### System Architecture:
+![](system_architecture-L1-System_Archtecture.png)
+### Solution Architecture:
+![](system_architecture-L2-Application_flow.png)
+You can open the architecture design in draw.io also.
+open https:draw.io and select the file system_architecture.drawio
 
 
 ### Requirement:
