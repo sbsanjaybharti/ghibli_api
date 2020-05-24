@@ -7,20 +7,22 @@ Flask application to serve data from ghibli api
 3. If cache exist then check if cache is not older than one min then get the data from cache and serve the data
 4. If cache exist but older than one minute then compare the data and check new release on ghibhi and if we find any new release then append the data in existing cache and serve the data
 
+### Requirement:
+* Python
+* Flask
+* Memcache
+* docker
+
 ### Architecture
 #### System Architecture:
+<img src="system_architecture-L1-System_Archtecture.png" width="80%">
+<img src="system_architecture-L2-Application_flow.png" width="80%">
 ![](system_architecture-L1-System_Archtecture.png)
 #### Solution Architecture:
 ![](system_architecture-L2-Application_flow.png)
 <br/>You can open the architecture design in draw.io also.
 open https:draw.io and select the file system_architecture.drawio
 
-
-### Requirement:
-* Python
-* Flask
-* Memcache
-* docker
 #### Folder Structure:
     --ghibli(main application)
       --src
