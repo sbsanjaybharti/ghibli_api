@@ -4,7 +4,7 @@ Flask application to serve data from ghibli api
 #### Description:
 1. Memcache server used to store cache.
 2. If cache does not exist then it will create the cache and serve the data
-3. If cache exist then check if cache is not older than one min then get the data from cache and serve the data
+3. If cache exist then check if cache is not older than one min, then get the data from cache and serve the data
 4. If cache exist but older than one minute then compare the data and check new release on ghibhi and if we find any new release then append the data in existing cache and serve the data
 
 ### Requirement:
@@ -16,7 +16,7 @@ Flask application to serve data from ghibli api
 1. Architecture
 2. Running url on docker
 3. Memcache container to manage cache
-4. Unit test with 44 test cases
+4. Unittest with 44 test cases
 5. PEP8 with pylint
 
 ### Architecture
@@ -91,3 +91,5 @@ replace <filename> with actual file name eg. run.py, src/service.py and so on
 5. Minimum hit to Ghibli API
 6. Initial cache can be creat by command line also if data is very high.
 
+#### Improvement:
+1. We add people groups also to cache and management them so that when ever new movie comes it will check the new peopel and accoding to that new release process will be more faster.
