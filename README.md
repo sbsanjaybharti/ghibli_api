@@ -16,7 +16,7 @@ Flask application to serve data from ghibli api
 1. Architecture
 2. Running url on docker
 3. Memcache container to manage cache
-4. Unit test with 44 test cases
+4. Unittest with 44 test cases
 5. PEP8 with pylint
 
 ### Architecture
