@@ -45,8 +45,8 @@ def movies():
 @manager.command
 def create_cache():
     """
-    Command: python run.py create
-    Description: To run the application
+    Command: python run.py create_cache
+    Description: To create cache on server
     """
     print('Creating cache under process....')
     request = Service()
