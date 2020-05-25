@@ -91,3 +91,5 @@ replace <filename> with actual file name eg. run.py, src/service.py and so on
 5. Minimum hit to Ghibli API
 6. Initial cache can be creat by command line also if data is very high.
 
+#### Improvement:
+1. We add people groups also to cache and management them so that when ever new movie comes it will check the new peopel and accoding to that new release process will be more faster.
